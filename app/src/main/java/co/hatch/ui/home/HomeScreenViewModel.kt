@@ -1,6 +1,5 @@
 package co.hatch.ui.home
 
-import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
 import androidx.lifecycle.ViewModel
@@ -19,32 +18,30 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeScreenViewModel @Inject constructor(private val connectivityClient: ConnectivityClient, private val navArguments: NavArguments) : ViewModel() {
 
-    @Inject
-    @IoDispatcher
-    lateinit var ioDispatcher: CoroutineDispatcher
+	@Inject
+	@IoDispatcher
+	lateinit var ioDispatcher: CoroutineDispatcher
 
-    private val _uiState = MutableStateFlow<HomeScreenState>(HomeScreenState.Default)
-    val uiState = _uiState.asStateFlow()
+	private val _uiState = MutableStateFlow<HomeScreenState>(HomeScreenState.Default)
+	val uiState = _uiState.asStateFlow()
 
-    private val _discoveredDevices = mutableStateListOf<Device>()
-    val discoveredDevices: SnapshotStateList<Device> = _discoveredDevices
+	private val _discoveredDevices = mutableStateListOf<Device>()
+	val discoveredDevices: SnapshotStateList<Device> = _discoveredDevices
 
-    fun resetViewState() {
-        _uiState.value = HomeScreenState.Default
-    }
+	fun resetViewState() {
+		_uiState.value = HomeScreenState.Default
+	}
 
-    fun discoverDevices() {
-        _uiState.value = HomeScreenState.Loading
-        _discoveredDevices.clear()
-        CoroutineScope(ioDispatcher).launch {
-            _discoveredDevices.addAll(connectivityClient.discoverDevices().sortedByDescending { it.rssi })
-        }
-        resetViewState()
+	fun discoverDevices() {
+		_uiState.value = HomeScreenState.Loading
+		CoroutineScope(ioDispatcher).launch {
+			_discoveredDevices.clear()
+			_discoveredDevices.addAll(connectivityClient.discoverDevices().sortedByDescending { it.rssi })
+			resetViewState()
+		}
+	}
 
-        Log.e("<><>:", _discoveredDevices.toString())
-    }
-
-    fun setDeviceDetailsArgument(device: Device) {
-        navArguments.setDeviceDetailsArguments(device)
-    }
+	fun setDeviceDetailsArgument(device: Device) {
+		navArguments.setDeviceDetailsArguments(device)
+	}
 }

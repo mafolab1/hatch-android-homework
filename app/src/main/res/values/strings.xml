@@ -1,9 +1,17 @@
 <resources>
     <string name="app_name">Hatch Homework Project</string>
+    <string name="connect_device">Connect Device</string>
+    <string name="connection_status">connection status</string>
     <string name="device_details">Device Details</string>
+    <string name="device_id">Device Id</string>
     <string name="device_name">Device Name</string>
     <string name="device_name_invalid">Device Name*</string>
     <string name="device_name_error_message">Please enter a valid device name</string>
-    <string name="last_connected">Last connected on  %1$s</string>
+    <string name="device_name_textfield_connect_helper">Please connect to the device name to change the name</string>
+    <string name="disconnect_device">Disconnect Device</string>
+    <string name="elapsed_time_connected_header">elapsed time connected</string>
+    <string name="last_connected">Last connected on %1$s</string>
+    <string name="last_connected_header">Last Connected</string>
     <string name="rssi">RSSI: %1$d</string>
+    <string name="rssi_header">RSSI</string>
 </resources>

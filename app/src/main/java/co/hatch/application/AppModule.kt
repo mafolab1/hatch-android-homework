@@ -1,6 +1,5 @@
 package co.hatch.application
 
-import android.app.Application
 import co.hatch.deviceClientLib.connectivity.ConnectivityClient
 import co.hatch.navigation.NavArguments
 import dagger.Module

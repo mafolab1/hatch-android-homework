@@ -9,16 +9,21 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class NavArguments  @Inject constructor() {
+class NavArguments @Inject constructor() {
 
 	var deviceDetailsArgument by mutableStateOf<DeviceDetailsArgumentModel?>(null)
 		private set
 
 	fun setDeviceDetailsArguments(device: Device?) {
-		deviceDetailsArgument = if(device != null) {
+		deviceDetailsArgument = if (device != null) {
 			DeviceDetailsArgumentModel(device = device)
 		} else {
 			null
 		}
 	}
+
+	fun clearAllArguments() {
+		deviceDetailsArgument = null
+	}
+
 }
