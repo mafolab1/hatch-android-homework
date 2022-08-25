@@ -14,7 +14,9 @@ android {
         targetSdk target_sdk
         versionCode version_code
         versionName version_name
-
+        vectorDrawables {
+            useSupportLibrary true
+        }
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -33,6 +35,13 @@ android {
         freeCompilerArgs += [
                 "-Xopt-in=kotlin.RequiresOptIn"
         ]
+    }
+    buildFeatures {
+        compose true
+        dataBinding true
+    }
+    composeOptions {
+        kotlinCompilerExtensionVersion compose_compiler
     }
 }
 

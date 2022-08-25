@@ -17,11 +17,11 @@ We're excited to move to the next step of the process with you. This exercise he
 
 ## Functional Requirements
 
-- You should be able to list all devices by using `ConnectivityClient#discoverDevices()`, even if there are thousands.
-- Keep the list of devices up to date by constantly rediscovering, make sure you call `ConnectivityClient#discoverDevices()` every 10 seconds or so. Your UI should refresh automatically every time the devices get updated.
-- The list should display the Devices with the higher RSSI on the top of the list.
+- You should be able to list all devices by using `ConnectivityClient#discoverDevices()`, even if there are thousands.✅
+- Keep the list of devices up to date by constantly rediscovering, make sure you call ✅`ConnectivityClient#discoverDevices()` every 10 seconds or so. Your UI should refresh automatically every time the devices get updated.✅
+- The list should display the Devices with the higher RSSI on the top of the list.✅
 - The user should have some information or indication in the UI while particular data is loading or if it is not available. As well as any kind of indicator in failure cases.
-- Your Device cell component should show the name, RSSI, and the readable date-time format from when it was last connected.
+- Your Device cell component should show the name, RSSI, and the readable date-time format from when it was last connected.✅
 - Once you know the `Device#id` you can perform more `ConnectivityClient` operations such: `connectToDeviceBy`, `updateDeviceName`, `disconnectFromDevice`. Use these operations in your secondary screen to display all Device information. Device state properties will change over time (while in connected state) so make sure your detail screen stays up to date with those changes.
 - As an optional requirement if you have time, in the detail screen show the device name in an input field that the user can use to rename it, use `ConnectivityClient#updateDeviceName`, the updated name should be reflected when the user goes back to the list screen.
 ### Please note that there is no expectation for you to spend time on:

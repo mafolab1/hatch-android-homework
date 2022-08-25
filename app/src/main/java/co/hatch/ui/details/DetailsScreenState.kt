@@ -1,4 +1,4 @@
-package co.hatch.screens.details
+package co.hatch.ui.details
 
 sealed class DetailsScreenState {
     object Default : DetailsScreenState()

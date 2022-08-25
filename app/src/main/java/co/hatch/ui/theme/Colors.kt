@@ -1,4 +1,4 @@
-package co.hatch.theme
+package co.hatch.ui.theme
 
 import androidx.compose.ui.graphics.Color
 

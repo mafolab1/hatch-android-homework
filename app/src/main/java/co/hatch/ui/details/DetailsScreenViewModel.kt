@@ -1,4 +1,4 @@
-package co.hatch.screens.details
+package co.hatch.ui.details
 
 import androidx.lifecycle.ViewModel
 import co.hatch.deviceClientLib.connectivity.ConnectivityClient

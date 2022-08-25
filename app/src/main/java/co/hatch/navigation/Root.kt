@@ -1,26 +1,29 @@
 package co.hatch.navigation
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
+import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import co.hatch.screens.details.DetailsScreen
-import co.hatch.screens.home.HomeScreen
+import co.hatch.ui.details.DetailsScreen
+import co.hatch.ui.home.HomeScreen
+import java.lang.RuntimeException
 
 @Composable
-fun Root(isDarkTheme: MutableState<Boolean>) {
-    val navController = LocalMainNavController.current
+fun Root( navController: NavHostController) {
 
     NavHost(
         navController,
-        startDestination = Screen.Root.Home.route,
+        startDestination = Screen.Home.route,
         route = ROOT_ROUTE
     ) {
-        composable(Screen.Root.Home.route) {
-            HomeScreen(isDarkTheme = isDarkTheme)
+        composable(Screen.Home.route) {
+            HomeScreen()
         }
-        composable(Screen.Root.Home.route) {
-            DetailsScreen(isDarkTheme = isDarkTheme)
+        composable(Screen.Details.route) {
+            DetailsScreen()
         }
     }
 

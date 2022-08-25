@@ -1,4 +1,4 @@
-package co.hatch.screens.home
+package co.hatch.ui.home
 
 sealed class HomeScreenState {
     object Default : HomeScreenState()

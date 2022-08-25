@@ -1,21 +1,19 @@
 package co.hatch
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.isSystemInDarkTheme
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
-import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.rememberNavController
-import co.hatch.deviceClientLib.connectivity.ConnectivityClient
 import co.hatch.navigation.LocalMainNavController
 import co.hatch.navigation.Root
-import co.hatch.theme.HatchTheme
+import co.hatch.ui.home.HomeScreen
+import co.hatch.ui.theme.HatchHomeworkProject
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -23,25 +21,25 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e("<><>", "asdfasdfa")
         renderUi()
     }
 
+    @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
     private fun renderUi() = setContent {
 
         val systemTheme = isSystemInDarkTheme()
         val isDarkTheme = remember { mutableStateOf(systemTheme) }
         val mainMavController = rememberNavController()
 
-        HatchTheme {
+        HatchHomeworkProject {
             CompositionLocalProvider(
                 LocalMainNavController provides mainMavController,
-                //LocalBackPressedDispatcher provides onBackPressedDispatcher
             ) {
 
                 Surface(modifier = Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-                    Root(isDarkTheme)
+                    Root(mainMavController)
                 }
-
             }
         }
     }
