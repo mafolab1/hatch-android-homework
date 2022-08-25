@@ -1,8 +1,39 @@
-// Top-level build file where you can add configuration options common to all sub-projects/modules.
+buildscript {
+    ext {
+        compose_version = '1.3.0-alpha02'
+        version_code = 1
+        version_name = '1.0'
+        min_sdk = 29
+        target_sdk = 32
+        compile_sdk = 32
+
+        //Dependencies
+
+        accompanist = '0.24.10-beta'
+        activity_compose = '1.6.0-alpha05'
+        androidx_core = '1.9.0-alpha05'
+        androidx_lifecycle = '2.6.0-alpha01'
+        compose_compiler = '1.3.0-rc02'
+        constraintlayout_compose = '1.0.1'
+        hiltVersion = '2.40.5'
+        coroutines = '1.6.0-native-mt'
+        gson = '2.9.0'
+        hiltComposeNavigation = '1.0.0'
+        hilt_android = '2.42'
+        hilt_lifecycle_viewmodel = '1.0.0-alpha0'
+        hilt_gradle = '2.39.1'
+        libPhoneNumber = '8.12.40'
+        material = '1.0.0-alpha01'
+        material3 = '1.0.0-alpha15'
+        mapboxVersion = '10.7.0'
+        navigation_compose = '2.5.0-rc01'
+        room = '2.4.0-rc01'
+    }
+}// Top-level build file where you can add configuration options common to all sub-projects/modules.
 plugins {
-    id 'com.android.application' version '7.1.1' apply false
-    id 'com.android.library' version '7.1.1' apply false
-    id 'org.jetbrains.kotlin.android' version '1.6.10' apply false
+    id 'com.android.application' version '7.2.2' apply false
+    id 'com.android.library' version '7.2.2' apply false
+    id 'org.jetbrains.kotlin.android' version '1.7.10' apply false
 }
 
 task clean(type: Delete) {
