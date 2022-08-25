@@ -3,11 +3,19 @@ package co.hatch.ui.details
 import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.AlternateEmail
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
@@ -41,6 +49,7 @@ private fun DetailsScreen(
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
+    val deviceNameError = remember { (viewModel.deviceNameTextFieldErrorState) }
 
     when (viewState) {
         is DetailsScreenState.Loading -> {
@@ -85,10 +94,66 @@ private fun DetailsScreen(
         },
     ) { innerPadding ->
 
-        Column(modifier = Modifier.fillMaxSize()
+        Column(modifier = Modifier
+            .fillMaxWidth()
+            .padding(innerPadding)
             .consumedWindowInsets(innerPadding)
         ) {
+            TextField(
+                value = viewModel.deviceName.value,
+                onValueChange = {
+                    viewModel.deviceName.value = it
+                    deviceNameError.value = !deviceNameError.value
+//                    isError = false
+                },
+                singleLine = true,
+                label = { Text(if (deviceNameError.value) {
+                    stringResource(id = R.string.device_name_invalid)
+                } else {
+                    stringResource(id = R.string.device_name)
+                }) },
+                isError = deviceNameError.value,
+//                keyboardActions = KeyboardActions { validate(text) },
+                modifier = Modifier
+                    .fillMaxWidth()
 
+            )
+            // Supporting text for error message.
+            Text(
+                text = stringResource(id = R.string.device_name_error_message),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 4.dp)
+                    .alpha(if (deviceNameError.value) 1f else 0f)
+            )
+
+            Text(
+                text = stringResource(id = R.string.device_name_error_message),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 4.dp)
+                    .alpha(if (deviceNameError.value) 1f else 0f)
+            )
+
+            Text(
+                text = stringResource(id = R.string.device_name_error_message),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 4.dp)
+                    .alpha(if (deviceNameError.value) 1f else 0f)
+            )
+
+            Text(
+                text = stringResource(id = R.string.device_name_error_message),
+                color = MaterialTheme.colorScheme.error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .padding(start = 16.dp, top = 4.dp)
+                    .alpha(if (deviceNameError.value) 1f else 0f)
+            )
 
         }
     }

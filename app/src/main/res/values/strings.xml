@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">Hatch Homework Project</string>
     <string name="device_details">Device Details</string>
+    <string name="device_name">Device Name</string>
+    <string name="device_name_invalid">Device Name*</string>
+    <string name="device_name_error_message">Please enter a valid device name</string>
     <string name="last_connected">Last connected on  %1$s</string>
     <string name="rssi">RSSI: %1$d</string>
 </resources>

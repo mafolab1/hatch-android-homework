@@ -1,5 +1,10 @@
 package co.hatch.ui.details
 
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import co.hatch.data.DeviceDetailsArgumentModel
 import co.hatch.deviceClientLib.connectivity.ConnectivityClient
@@ -15,6 +20,9 @@ class DetailsScreenViewModel @Inject constructor(private val connectivityClient:
 
     private val mutableState = MutableStateFlow<DetailsScreenState>(DetailsScreenState.Default)
     val uiState = mutableState.asStateFlow()
+
+    var deviceName =  mutableStateOf(getDeviceDetailsArgument()?.name ?: "")
+    val deviceNameTextFieldErrorState = mutableStateOf(false)
 
     fun resetViewState() {
         mutableState.value = DetailsScreenState.Default
