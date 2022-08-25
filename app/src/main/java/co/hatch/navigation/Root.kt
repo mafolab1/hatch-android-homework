@@ -10,17 +10,17 @@ import co.hatch.ui.home.HomeScreen
 @Composable
 fun Root(navController: NavHostController) {
 
-    NavHost(
-        navController,
-        startDestination = Screen.Home.route,
-        route = ROOT_ROUTE
-    ) {
-        composable(Screen.Home.route) {
-            HomeScreen()
-        }
-        composable(Screen.Details.route) {
-            DetailsScreen()
-        }
-    }
+	NavHost(
+		navController,
+		startDestination = Screen.Home.route,
+		route = ROOT_ROUTE
+	) {
+		composable(Screen.Home.route) {
+			HomeScreen()
+		}
+		composable(Screen.Details.route) {
+			DetailsScreen()
+		}
+	}
 
 }
