@@ -1,5 +1,6 @@
 package co.hatch.ui.details
 
+import android.util.Log
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -13,8 +14,6 @@ import androidx.navigation.NavController
 import co.hatch.R
 import co.hatch.navigation.LocalMainNavController
 import co.hatch.ui.common.TopBar
-import co.hatch.ui.home.DeviceListItem
-import kotlinx.coroutines.launch
 
 @Composable
 fun DetailsScreen() {
@@ -36,6 +35,10 @@ private fun DetailsScreen(
     navController: NavController
 ) {
 
+    val device = viewModel.getDeviceDetailsArgument()
+
+    Log.e("<><>", "device: $device" )
+
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
 
@@ -45,6 +48,7 @@ private fun DetailsScreen(
         }
         else -> {}
     }
+
 
     Scaffold(
         topBar = { TopBar(stringResource(id = R.string.device_details), true) },

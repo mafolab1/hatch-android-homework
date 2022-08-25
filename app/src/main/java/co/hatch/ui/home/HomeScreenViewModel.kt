@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import co.hatch.application.IoDispatcher
 import co.hatch.deviceClientLib.connectivity.ConnectivityClient
 import co.hatch.deviceClientLib.model.Device
+import co.hatch.navigation.NavArguments
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -16,7 +17,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeScreenViewModel @Inject constructor(private val connectivityClient: ConnectivityClient) : ViewModel() {
+class HomeScreenViewModel @Inject constructor(private val connectivityClient: ConnectivityClient, private val navArguments: NavArguments) : ViewModel() {
 
     @Inject
     @IoDispatcher
@@ -43,7 +44,7 @@ class HomeScreenViewModel @Inject constructor(private val connectivityClient: Co
         Log.e("<><>:", _discoveredDevices.toString())
     }
 
-    suspend fun isAuthenticated() {
-//		if(settings.getDeviceId)
+    fun setDeviceDetailsArgument(device: Device) {
+        navArguments.setDeviceDetailsArguments(device)
     }
 }

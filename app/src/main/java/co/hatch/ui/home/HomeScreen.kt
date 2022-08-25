@@ -70,8 +70,8 @@ private fun HomeScreen(
         }
     }
 
-    val onDeviceClicked: (Device?) -> Unit = { device ->
-//        dayIndividualTripsGridViewModel.setSelectedTripDate(trip)
+    val onDeviceClicked: (Device) -> Unit = { device ->
+        viewModel.setDeviceDetailsArgument(device)
         navController.navigate(Screen.Details.route)
     }
 
