@@ -1,27 +1,24 @@
 package co.hatch.ui.details
 
-import android.util.Log
-import androidx.compose.foundation.border
+import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AlternateEmail
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavController
 import co.hatch.R
-import co.hatch.navigation.LocalMainNavController
+import co.hatch.ui.common.SnackbarVisualsWithError
 import co.hatch.ui.common.TopBar
+import co.hatch.ui.details.components.*
 
 @Composable
 fun DetailsScreen() {
@@ -30,8 +27,7 @@ fun DetailsScreen() {
 
     DetailsScreen(
         viewState = state,
-        viewModel = viewModel,
-        navController = LocalMainNavController.current
+        viewModel = viewModel
     )
 }
 
@@ -39,123 +35,155 @@ fun DetailsScreen() {
 @Composable
 private fun DetailsScreen(
     viewState: DetailsScreenState,
-    viewModel: DetailsScreenViewModel,
-    navController: NavController
+    viewModel: DetailsScreenViewModel
 ) {
 
-    val device = viewModel.getDeviceDetailsArgument()
-
-    Log.e("<><>", "device: $device" )
+    val device = remember {
+        viewModel.device
+    }
 
     val snackbarHostState = remember { SnackbarHostState() }
     val scope = rememberCoroutineScope()
     val deviceNameError = remember { (viewModel.deviceNameTextFieldErrorState) }
+    val focusManager = LocalFocusManager.current
 
-    when (viewState) {
-        is DetailsScreenState.Loading -> {
-
-        }
-        else -> {}
+    val goBack: () -> Unit = {
+        viewModel.clearNavArgs()
     }
 
+    val connectionButtonPressed: () -> Unit = {
+        if (viewModel.device.value?.connected == true) {
+            viewModel.disconnectDevice()
+        } else {
+            viewModel.connectDevice()
+        }
+    }
 
     Scaffold(
-        topBar = { TopBar(stringResource(id = R.string.device_details), true) },
+        modifier = Modifier.imePadding(),
+        topBar = { TopBar(stringResource(id = R.string.device_details), true, goBack) },
         snackbarHost = {
-            // reuse default SnackbarHost to have default animation and timing handling
             SnackbarHost(snackbarHostState) { data ->
-                // custom snackbar with the custom action button color and border
-                val isError = false
-                val buttonColor = if (isError) {
-                    ButtonDefaults.textButtonColors(
-                        containerColor = MaterialTheme.colorScheme.errorContainer,
-                        contentColor = MaterialTheme.colorScheme.error
-                    )
-                } else {
-                    ButtonDefaults.textButtonColors(
-                        contentColor = MaterialTheme.colorScheme.inversePrimary
-                    )
-                }
+                val isError = (data.visuals as? SnackbarVisualsWithError)?.isError ?: false
 
                 Snackbar(
                     modifier = Modifier
-                        .border(2.dp, MaterialTheme.colorScheme.secondary)
                         .padding(12.dp),
                     action = {
-                        TextButton(
-                            onClick = { if (isError) data.dismiss() else data.performAction() },
-                            colors = buttonColor
-                        ) { Text(data.visuals.actionLabel ?: "") }
-                    }
+                    },
+                    containerColor = if (isError) MaterialTheme.colorScheme.error else SnackbarDefaults.color
                 ) {
-                    Text(data.visuals.message)
+                    Text(
+                        text = data.visuals.message,
+                        color = if (isError) MaterialTheme.colorScheme.onError else SnackbarDefaults.contentColor
+                    )
                 }
             }
         },
     ) { innerPadding ->
 
-        Column(modifier = Modifier
-            .fillMaxWidth()
-            .padding(innerPadding)
-            .consumedWindowInsets(innerPadding)
+        ConstraintLayout(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .consumedWindowInsets(innerPadding)
         ) {
-            TextField(
-                value = viewModel.deviceName.value,
-                onValueChange = {
-                    viewModel.deviceName.value = it
-                    deviceNameError.value = !deviceNameError.value
-//                    isError = false
-                },
-                singleLine = true,
-                label = { Text(if (deviceNameError.value) {
-                    stringResource(id = R.string.device_name_invalid)
-                } else {
-                    stringResource(id = R.string.device_name)
-                }) },
-                isError = deviceNameError.value,
-//                keyboardActions = KeyboardActions { validate(text) },
+            val (itemList, connectionButton) = createRefs()
+
+            //Created a lazy column for smaller device so the user will be able to scroll the content
+            LazyColumn(
+                verticalArrangement = Arrangement.spacedBy(8.dp),
+                contentPadding = PaddingValues(16.dp),
                 modifier = Modifier
                     .fillMaxWidth()
+                    .constrainAs(itemList) {
+                        top.linkTo(parent.top)
+                    }
+            ) {
 
-            )
-            // Supporting text for error message.
-            Text(
-                text = stringResource(id = R.string.device_name_error_message),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
+
+                //Broke up the items just to make the code clearer and easier to read.
+                item {
+                    DeviceIdContainer(device.value!!.id)
+                }
+
+                item {
+                    DeviceNameContainer(
+                        viewModel = viewModel,
+                        connected = device.value!!.connected,
+                        deviceNameError = deviceNameError,
+                        focusManager = focusManager
+                    )
+                }
+
+                item {
+                    RssiComponent(device.value!!.rssi)
+
+                }
+
+                item {
+                    ConnectedComponent(device.value!!.connected)
+
+                }
+
+                item {
+                    LastConnectedComponent(device.value!!.latestConnectedTime)
+
+                }
+
+                item {
+                    ElapsedTimeComponent(device.value!!.elapsedSecsConnected)
+
+                }
+            }
+
+            ConnectionButtonComponent(device.value!!.connected,
+                connectionButtonPressed,
                 modifier = Modifier
-                    .padding(start = 16.dp, top = 4.dp)
-                    .alpha(if (deviceNameError.value) 1f else 0f)
-            )
-
-            Text(
-                text = stringResource(id = R.string.device_name_error_message),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 4.dp)
-                    .alpha(if (deviceNameError.value) 1f else 0f)
-            )
-
-            Text(
-                text = stringResource(id = R.string.device_name_error_message),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 4.dp)
-                    .alpha(if (deviceNameError.value) 1f else 0f)
-            )
-
-            Text(
-                text = stringResource(id = R.string.device_name_error_message),
-                color = MaterialTheme.colorScheme.error,
-                style = MaterialTheme.typography.bodySmall,
-                modifier = Modifier
-                    .padding(start = 16.dp, top = 4.dp)
-                    .alpha(if (deviceNameError.value) 1f else 0f)
-            )
-
+                    .padding(16.dp)
+                    .constrainAs(connectionButton) {
+                        top.linkTo(itemList.bottom)
+                        baseline.linkTo(parent.baseline)
+                        bottom.linkTo(parent.bottom)
+                    })
         }
+
+
     }
 
+    when (viewState) {
+        is DetailsScreenState.Loading -> {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .clickable(
+                        indication = null,
+                        interactionSource = remember { MutableInteractionSource() }
+                    ) {}
+                    .fillMaxSize()
+                    .background(Color.Black.copy(alpha = 0.6f))
+            ) {
+                CircularProgressIndicator(
+                    modifier = Modifier.padding(8.dp),
+                    strokeWidth = 2.dp
+                )
+            }
+        }
+        is DetailsScreenState.Success -> {
+            focusManager.clearFocus()
+            viewModel.showSnackBar(snackbarHostState, false)
+            viewModel.resetViewState()
+        }
+        is DetailsScreenState.Error -> {
+            viewModel.showSnackBar(snackbarHostState, true, viewState.errorMessage)
+            viewModel.resetViewState()
+        }
+        else -> {}
+    }
 }
+
+
+
+
+
+
